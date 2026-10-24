@@ -1,0 +1,209 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scripts/juego.gd" id="1_juego"]
+[ext_resource type="PackedScene" path="res://scenes/jugador.tscn" id="2_jugador"]
+[ext_resource type="PackedScene" path="res://scenes/zombie_tonto.tscn" id="3_tonto"]
+[ext_resource type="PackedScene" path="res://scenes/zombie_inteligente.tscn" id="4_inteligente"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_nivel"]
+vertices = PackedVector2Array(626, 504, 1122, 618, 30, 618, 526, 504, 1122, 30, 626, 144, 30, 30, 526, 144)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(4, 1, 0, 5), PackedInt32Array(6, 4, 5, 7), PackedInt32Array(3, 2, 6, 7)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(0, 0, 1152, 0, 1152, 648, 0, 648)])
+parsed_geometry_type = 1
+parsed_collision_mask = 2
+source_geometry_mode = 1
+source_geometry_group_name = &"navegacion"
+agent_radius = 30.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_Pared"]
+size = Vector2(40, 300)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_BordeArriba"]
+size = Vector2(1192, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_BordeAbajo"]
+size = Vector2(1192, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_BordeIzquierdo"]
+size = Vector2(40, 688)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_BordeDerecho"]
+size = Vector2(40, 688)
+
+[sub_resource type="Animation" id="Animation_RESET"]
+resource_name = "RESET"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_inicio"]
+resource_name = "inicio"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_final"]
+resource_name = "final"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_transicion"]
+_data = {
+&"RESET": SubResource("Animation_RESET"),
+&"final": SubResource("Animation_final"),
+&"inicio": SubResource("Animation_inicio")
+}
+
+[node name="Nivel1" type="Node2D"]
+script = ExtResource("1_juego")
+siguiente_nivel = "res://scenes/nivel_2.tscn"
+nombre_nivel = "Nivel 1"
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_nivel")
+
+[node name="Paredes" type="Node2D" parent="." groups=["navegacion"]]
+
+[node name="Pared" type="StaticBody2D" parent="Paredes"]
+position = Vector2(576, 324)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Paredes/Pared"]
+shape = SubResource("RectangleShape2D_Pared")
+
+[node name="ColorRect" type="ColorRect" parent="Paredes/Pared"]
+offset_left = -20.0
+offset_top = -150.0
+offset_right = 20.0
+offset_bottom = 150.0
+mouse_filter = 2
+color = Color(0.42, 0.45, 0.52, 1)
+
+[node name="Bordes" type="Node2D" parent="."]
+
+[node name="BordeArriba" type="StaticBody2D" parent="Bordes"]
+position = Vector2(576.0, -20)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bordes/BordeArriba"]
+shape = SubResource("RectangleShape2D_BordeArriba")
+
+[node name="BordeAbajo" type="StaticBody2D" parent="Bordes"]
+position = Vector2(576.0, 668)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bordes/BordeAbajo"]
+shape = SubResource("RectangleShape2D_BordeAbajo")
+
+[node name="BordeIzquierdo" type="StaticBody2D" parent="Bordes"]
+position = Vector2(-20, 324.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bordes/BordeIzquierdo"]
+shape = SubResource("RectangleShape2D_BordeIzquierdo")
+
+[node name="BordeDerecho" type="StaticBody2D" parent="Bordes"]
+position = Vector2(1172, 324.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bordes/BordeDerecho"]
+shape = SubResource("RectangleShape2D_BordeDerecho")
+
+[node name="Jugador" parent="." instance=ExtResource("2_jugador")]
+position = Vector2(150, 324)
+
+[node name="ZombieTonto" parent="." instance=ExtResource("3_tonto")]
+position = Vector2(950, 180)
+
+[node name="ZombieInteligente" parent="." instance=ExtResource("4_inteligente")]
+position = Vector2(950, 470)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="LabelEnergia" type="Label" parent="HUD"]
+offset_left = 16.0
+offset_top = 10.0
+offset_right = 260.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 22
+text = "Energía: 300"
+
+[node name="LabelNivel" type="Label" parent="HUD"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -260.0
+offset_top = 10.0
+offset_right = -16.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 22
+text = "Nivel"
+horizontal_alignment = 2
+
+[node name="LabelAyuda" type="Label" parent="HUD"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -36.0
+offset_right = 900.0
+offset_bottom = -10.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.6)
+theme_override_font_sizes/font_size = 14
+text = "WASD / flechas: mover   |   Click / Enter: disparar   |   Esc: pasar de nivel"
+
+[node name="Transicion" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="ColorRect" type="ColorRect" parent="Transicion"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Transicion"]
+libraries = {
+&"": SubResource("AnimationLibrary_transicion")
+}
+autoplay = &"inicio"

@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/zombie_inteligente.gd" id="1_zombie"]
+[ext_resource type="Texture2D" path="res://icon.svg" id="2_icon"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cuerpo"]
+radius = 20.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ataque"]
+radius = 30.0
+
+[node name="ZombieInteligente" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 7
+motion_mode = 1
+script = ExtResource("1_zombie")
+velocidad = 110.0
+vida = 5
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.95, 0.3, 0.3, 1)
+scale = Vector2(0.35, 0.35)
+texture = ExtResource("2_icon")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_cuerpo")
+
+[node name="AreaAtaque" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaAtaque"]
+shape = SubResource("CircleShape2D_ataque")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 4.0
+target_desired_distance = 4.0
+radius = 20.0
+
+[connection signal="body_entered" from="AreaAtaque" to="." method="_on_area_ataque_body_entered"]
